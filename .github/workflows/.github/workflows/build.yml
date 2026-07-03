@@ -1,0 +1,35 @@
+
+name: Build EXE
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Baixar código
+        uses: actions/checkout@v4
+
+      - name: Instalar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Instalar dependências
+        run: |
+          pip install pyinstaller
+
+      - name: Gerar EXE
+        run: |
+          pyinstaller --onefile --windowed GH_Renovacao_Atualizado.py
+
+      - name: Salvar artefato
+        uses: actions/upload-artifact@v4
+        with:
+          name: GH-Renovacao-EXE
+          path: dist/*.exe
